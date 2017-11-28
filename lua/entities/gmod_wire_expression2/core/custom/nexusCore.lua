@@ -89,12 +89,10 @@ if ( SERVER ) then
 	
 	--[[-------------------------------------------------
 		Function: teleport
-	------------------------------------------------------------------------------------------------------]]
+	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	-- Setup E2 Function
 	e2function void entity:teleport(vector pos)
 		local isAdmin = false
 		local antiSpam = false
@@ -155,10 +153,8 @@ if ( SERVER ) then
 		Function: playerUniqueID
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(5)
 	
-	-- Setup E2 Function
 	e2function number entity:playerUniqueId()
 		-- If entity is not Valid
 		if ( not this:IsValid() ) then return 0 end 
@@ -172,8 +168,8 @@ if ( SERVER ) then
 		Function: ApplyPlayerForce
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(20)
+	
 	e2function void entity:applyPlayerForce(vector pos)
 		local isAdmin = false
 		local propProtection = false
@@ -215,10 +211,8 @@ if ( SERVER ) then
 		Function: hasNoCollideAll
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(1)
 	
-	-- Setup E2 Function
 	e2function number entity:hasNoCollideAll()
 		-- If entity is not Valid
 		if ( not this:IsValid() ) then return false end 
@@ -231,10 +225,8 @@ if ( SERVER ) then
 		Function: setCollideAll
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	-- Setup E2 Function
 	e2function void entity:setNoCollideAll()
 		local isAdmin = false
 		local propProtection = false
@@ -268,10 +260,8 @@ if ( SERVER ) then
 		Function: removeNoCollideAll
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(25)
 	
-	-- Setup E2 Function
 	e2function void entity:removeNoCollideAll()
 		local isAdmin = false
 		local propProtection = false
@@ -305,10 +295,8 @@ if ( SERVER ) then
 		Function: setOwner
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(200)
 	
-	-- Setup E2 Function
 	e2function void entity:setOwner(entity player)
 		-- If is not valid then quit
 		if ( not this:IsValid() ) then return end
@@ -329,10 +317,8 @@ if ( SERVER ) then
 		Function: ignite
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	-- Setup E2 Function
 	e2function void entity:ignite()
 		local isAdmin = false
 		local propProtection = false
@@ -366,10 +352,8 @@ if ( SERVER ) then
 		Function: extinguish
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(15)
 	
-	-- Setup E2 Function
 	e2function void entity:extinguish()
 		local isAdmin = false
 		local propProtection = false
@@ -406,10 +390,8 @@ if ( SERVER ) then
 		Function: setHealth
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(100)
 	
-	-- Setup E2 Function
 	e2function void entity:setHealth(number amount)
 		-- If is not valid then quit
 		if ( not this:IsValid() ) then return end
@@ -427,10 +409,8 @@ if ( SERVER ) then
 		Function: takeDamage
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(45)
 	
-	-- Setup E2 Function
 	e2function void entity:takeDamage(number damageAmount)
 		local isAdmin = false
 		local antiSpam = false
@@ -484,10 +464,8 @@ if ( SERVER ) then
 		Function: set
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(15)
 	
-	-- Setup E2 Function
 	e2function void entity:set(string input, string param)
 		-- If is not valid then quit
 		if ( not this:IsValid() ) then return end
@@ -498,7 +476,6 @@ if ( SERVER ) then
 		end
 	end
 	
-	-- Setup E2 Function
 	e2function void entity:set(string input, number param)
 		-- If is not valid then quit
 		if ( not this:IsValid() ) then return end
@@ -513,10 +490,8 @@ if ( SERVER ) then
 		Function: tableToJson
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(20)
 	
-	-- Setup E2 Function
 	e2function string tableToJson(table data)
 		-- If is not valid then quit
 		if ( type( data ) ~= "table" ) then return "" end
@@ -525,7 +500,6 @@ if ( SERVER ) then
 		return util.TableToJSON( data )
 	end
 	
-	-- Setup E2 Function
 	e2function table jsonToTable(string data)
 		if ( data == "" ) then return end
 		return util.JSONToTable( data )
@@ -536,10 +510,8 @@ if ( SERVER ) then
 		Function: animate
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	-- Setup E2 Function
 	e2function void entity:animate(number Animation)
 		local isAdmin = false
 		local propProtection = false
@@ -565,10 +537,8 @@ if ( SERVER ) then
 		end
 	end
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(55)
 	
-	-- Setup E2 Function
 	e2function void entity:animate(string Animation)
 		local isAdmin = false
 		local propProtection = false
@@ -594,10 +564,8 @@ if ( SERVER ) then
 		end
 	end
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(60)
 	
-	-- Setup E2 Function
 	e2function void entity:animate(number Sequence, number Speed)
 		local isAdmin = false
 		local propProtection = false
@@ -624,10 +592,8 @@ if ( SERVER ) then
 		end
 	end
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(60)
 	
-	-- Setup E2 Function
 	e2function void entity:animate(string Animation, number Speed)
 		local isAdmin = false
 		local propProtection = false
@@ -654,20 +620,15 @@ if ( SERVER ) then
 		end
 	end
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(5)
 	
-	-- Setup E2 Function
 	e2function number entity:getAnimation()
 		if ( not this:IsValid() ) then return 0 end
 		return this:GetSequence() or 0
 	end
 	
-	
-	-- SetUp E2 Function Cost
 	__e2setcost(10)
 	
-	-- Setup E2 Function
 	e2function number entity:getAnimationByName(string Animation)
 		if ( not this:IsValid() ) then return 0 end
 		if ( string.Trim( Animation ) == "") then
@@ -681,10 +642,8 @@ if ( SERVER ) then
 		Function: disableFallDamage
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	-- Setup E2 Function
 	e2function number entity:disableFallDamage()
 		local isAdmin = false
 		local propProtection = false
@@ -718,10 +677,8 @@ if ( SERVER ) then
 		Function: enableFallDamage
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	-- Setup E2 Function
 	e2function number entity:enableFallDamage()
 		local isAdmin = false
 		local propProtection = false
@@ -755,10 +712,8 @@ if ( SERVER ) then
 		Function: egpHUDSetPlayer
 	---------------------------------------------------]]
 	
-	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	-- Setup E2 Function
 	e2function void entity:egpHUDSetPlayer(entity ply)
 	
 		local isAdmin = false
@@ -798,7 +753,7 @@ if ( SERVER ) then
 		end
 	end
 	
-	-- SetUp E2 Function Cost
+	-- Clear E2 cost for external functions
 	__e2setcost(nil)
 
 	-- Log Loading Message

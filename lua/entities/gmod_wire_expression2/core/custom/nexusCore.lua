@@ -9,7 +9,7 @@
 ---------------------------------------------------]]
 
 if SERVER then
-	--Loading Messages
+	-- Loading Messages
 	Msg( "/====================================\\\n")
 	Msg( "||     Nexus Core (E2 Functions)    ||\n" )
 	Msg( "||----------------------------------||\n" )
@@ -34,31 +34,31 @@ if SERVER then
 	
 	hook.Add("GetFallDamage", "Get Fall Damage", GetFallDamage)
 	
-	--Setup Loading Log Formatation
+	-- Setup Loading Log Formatation
 	function loadingLog(text)
-		--Set Max Size
+		-- Set Max Size
 		local size = 32
-		--If Text Len < max size
+		-- If Text Len < max size
 		if(string.len(text) < size) then
 			-- Format the text to be Text+Spaces*LeftSize
 			text = text .. string.rep( " ", size-string.len(text) )
 		else
-			--If Text is too much big then cut and add ...
+			-- If Text is too much big then cut and add ...
 			text = string.Left( text, size-3 ) .. "..."
 		end
-		--Log Messsage
+		-- Log Messsage
 		Msg( "||  "..text.."||\n" )
 	end
 	
 	local function Animate( Ent, Animation )
-		--If Entity is Valid and Animation are not Empty
+		-- If Entity is Valid and Animation are not Empty
 		if (Ent:IsValid() and Animation ~= "") then
-			--If Entity is not animated
+			-- If Entity is not animated
 			if not Ent.Animated then
 				-- This must be run once on entities that will be animated
 				Ent.Animated = true
 				Ent.AutomaticFrameAdvance = true
-				--Think on Entity
+				-- Think on Entity
 				local OldThink = Ent.Think
 				function Ent:Think()
 					OldThink(self)
@@ -67,43 +67,43 @@ if SERVER then
 				end
 			end
 			
-			--If Animation is String
+			-- If Animation is String
 			if type(Animation) == "string" then
-				--If Animation are not Empty
+				-- If Animation are not Empty
 				if(string.Trim(Animation) == "") then
 					Animation = 0
 				else
-					--Find Animation Number
+					-- Find Animation Number
 					Animation = Ent:LookupSequence(string.Trim(Animation)) or 0
 				end
 			end
 			
-			--Floor
+			-- Floor
 			Animation = math.floor(Animation)
 			
-			--Reset Sequence
+			-- Reset Sequence
 			Ent:ResetSequence(Animation)
-			--Set Cycle of Zero
+			-- Set Cycle of Zero
 			Ent:SetCycle(0)
-			--Set PlayBack Rate at One
+			-- Set PlayBack Rate at One
 			Ent:SetPlaybackRate(1)
 		end
 	end
 	
-	--Log Loading Message
+	-- Log Loading Message
 	Msg( "|| Loading...                       ||\n" )
 	
 	--[[-------------------------------------------------
 		Function: teleport
 	------------------------------------------------------------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:teleport(Vector)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:teleport(vector pos)
 		local isAdmin = false
 		local antiSpam = false
@@ -111,29 +111,29 @@ if SERVER then
 		local ReUseList = {}
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this and this:IsValid() then 
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
-				--Set Player In ReUseList
+				-- Set Player In ReUseList
 				if not ReUseList[self.player:UniqueID()] then
 					ReUseList[self.player:UniqueID()] = -1
 				end
 				
-				--Check if user are not spaming with the e2
+				-- Check if user are not spaming with the e2
 				if ReUseList[self.player:UniqueID()] == -1 then
 					antiSpam = true
 				elseif CurTime() > ReUseList[self.player:UniqueID()] then 
 					antiSpam = true
 				end
 				
-				--If Pass
+				-- If Pass
 				if antiSpam then
-					--Set ReUseList Timeout
+					-- Set ReUseList Timeout
 					ReUseList[self.player:UniqueID()] = CurTime() + AntiSpamTimeout
 					-- If This is a Player
 					if not this:IsPlayer() then
@@ -147,15 +147,15 @@ if SERVER then
 		
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or ( antiSpam and propProtection ) ) then
-			--If is Player
+			-- If is Player
 			if this:IsPlayer() then
-				--If Player is In Vehicle
+				-- If Player is In Vehicle
 				if this:InVehicle() then
-					--Force Player get out from Vehicle
+					-- Force Player get out from Vehicle
 					this:ExitVehicle()
 				end 
 			end
-			--Teleport entity to Position
+			-- Teleport entity to Position
 			this:SetPos(Vector(pos[1], pos[2], pos[3]))
 		end
 	end
@@ -164,19 +164,19 @@ if SERVER then
 		Function: playerUniqueID
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:playerUniqueId()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(5)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function number entity:playerUniqueId()
-		--If entity is not Valid
+		-- If entity is not Valid
 		if not this:IsValid() then return 0 end 
-		--If entity is Not a Player
+		-- If entity is Not a Player
 		if not this:IsPlayer() then return 0 end
-		--Return Player UniqueID
+		-- Return Player UniqueID
 		return this:UniqueID()
 	end
 	
@@ -184,21 +184,21 @@ if SERVER then
 		Function: ApplyPlayerForce
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:applyPlayerForce(Vector)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(20)
 	e2function void entity:applyPlayerForce(vector pos)
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() and this:IsPlayer() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -213,15 +213,15 @@ if SERVER then
 		
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or propProtection ) then
-			--If is Player
+			-- If is Player
 			if this:IsPlayer() then
-				--If Player is In Vehicle
+				-- If Player is In Vehicle
 				if this:InVehicle() then
-					--Force Player get out from Vehicle
+					-- Force Player get out from Vehicle
 					this:ExitVehicle()
 				end 
 			end
-			--Apply Velocity to entity
+			-- Apply Velocity to entity
 			this:SetVelocity(Vector(pos[1],pos[2],pos[3]))
 		end
 	end
@@ -230,18 +230,18 @@ if SERVER then
 		Function: hasNoCollideAll
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:hasNoCollideAll()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(1)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function number entity:hasNoCollideAll()
-		--If entity is not Valid
+		-- If entity is not Valid
 		if not this:IsValid() then return false end 
 		
-		--Return if entity has No CollideAll
+		-- Return if entity has No CollideAll
 		return util.tobool(this:GetCollisionGroup() == COLLISION_GROUP_WORLD)
 	end
 	
@@ -249,23 +249,23 @@ if SERVER then
 		Function: setCollideAll
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:setCollideAll()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:setNoCollideAll()
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() and not this:IsPlayer() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -280,7 +280,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			--Apply Velocity to entity
+			-- Apply Velocity to entity
 			this:SetCollisionGroup(COLLISION_GROUP_WORLD)
 		end
 	end
@@ -289,23 +289,23 @@ if SERVER then
 		Function: removeNoCollideAll
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:removeNoCollideAll()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(25)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:removeNoCollideAll()
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() and not this:IsPlayer() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -320,7 +320,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			--Remove No CollideAll
+			-- Remove No CollideAll
 			this:SetCollisionGroup(COLLISION_GROUP_NONE)
 		end
 	end
@@ -329,25 +329,25 @@ if SERVER then
 		Function: setOwner
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:setOwner(Entity)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(200)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:setOwner(entity player)
-		--If is not valid then quit
+		-- If is not valid then quit
 		if not this:IsValid() then return end
-		--If is player then quit
+		-- If is player then quit
 		if this:IsPlayer() then return end
-		--If Player is Really a player then quit
+		-- If Player is Really a player then quit
 		if not player:IsPlayer() then return end
 
-		--Check if Player is not Admin and Game is Not SinglePlayer
+		-- Check if Player is not Admin and Game is Not SinglePlayer
 		if self.player:IsAdmin() and not game.SinglePlayer() then
-			--Set Owner
-			--this.Owner = player
+			-- Set Owner
+			-- this.Owner = player
 			this:SetPlayer(player)
 		end	
 	end
@@ -356,23 +356,23 @@ if SERVER then
 		Function: ignite
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:ignite()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:ignite()
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -387,7 +387,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			--Ignite
+			-- Ignite
 			this:Ignite(99999999, 0)
 		end
 	end
@@ -396,23 +396,23 @@ if SERVER then
 		Function: extinguish
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:extinguish()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(15)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:extinguish()
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -427,9 +427,9 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			--If Is On Fire
+			-- If Is On Fire
 			if(this:IsOnFire()) then
-				--Extinguish
+				-- Extinguish
 				this:Extinguish()
 			end
 		end
@@ -439,20 +439,20 @@ if SERVER then
 		Function: setHealth
 	---------------------------------------------------]]
 	
-		--Log Loading Message
+		-- Log Loading Message
 	loadingLog("Entity:setHealth(Number)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(100)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:setHealth(number amount)
-		--If is not valid then quit
+		-- If is not valid then quit
 		if not this:IsValid() then return end
-		--If is not valid player then quit
+		-- If is not valid player then quit
 		if not this:IsPlayer() then return end
 		
-		--Check if Player is not Admin and Game is Not SinglePlayer
+		-- Check if Player is not Admin and Game is Not SinglePlayer
 		if self.player:IsAdmin() or game.SinglePlayer() then
 			this:SetHealth(amount)
 		end
@@ -463,13 +463,13 @@ if SERVER then
 		Function: takeDamage
 	---------------------------------------------------]]
 	
-		--Log Loading Message
+		-- Log Loading Message
 	loadingLog("Entity:takeDamage(Number)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(45)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:takeDamage(number damageAmount)
 		local isAdmin = false
 		local antiSpam = false
@@ -477,29 +477,29 @@ if SERVER then
 		local ReUseList = {}
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() and not this:IsPlayer() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
-				--Set Player In ReUseList
+				-- Set Player In ReUseList
 				if not ReUseList[self.player:UniqueID()] then
 					ReUseList[self.player:UniqueID()] = -1
 				end
 				
-				--Check if user are not spaming with the e2
+				-- Check if user are not spaming with the e2
 				if ReUseList[self.player:UniqueID()] == -1 then
 					antiSpam = true
 				elseif CurTime() > ReUseList[self.player:UniqueID()] then
 					antiSpam = true
 				end
 				
-				--If Pass
+				-- If Pass
 				if antiSpam then
-					--Set ReUseList Timeout
+					-- Set ReUseList Timeout
 					ReUseList[self.player:UniqueID()] = CurTime() + AntiSpamTimeout
 					
 					-- If This is a Player
@@ -514,7 +514,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or ( antiSpam and propProtection ) ) then
-			--Take Damage
+			-- Take Damage
 			this:TakeDamage( damageAmount, self.player, self )
 		end
 	end
@@ -523,32 +523,32 @@ if SERVER then
 		Function: set
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:set(String, String)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(15)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:set(string input, string param)
-		--If is not valid then quit
+		-- If is not valid then quit
 		if not this:IsValid() then return end
 		
-		--Check if Player is not Admin and Game is Not SinglePlayer
+		-- Check if Player is not Admin and Game is Not SinglePlayer
 		if self.player:IsAdmin() or game.SinglePlayer() then
 			this:Fire(input, param)
 		end
 	end
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:set(String, Number)")
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:set(string input, number param)
-		--If is not valid then quit
+		-- If is not valid then quit
 		if not this:IsValid() then return end
 		
-		--Check if Player is not Admin and Game is Not SinglePlayer
+		-- Check if Player is not Admin and Game is Not SinglePlayer
 		if self.player:IsAdmin() or game.SinglePlayer() then
 			this:Fire(input, param)
 		end
@@ -558,25 +558,25 @@ if SERVER then
 		Function: tableToJson
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("tableToJson(Table)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(20)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function string tableToJson(table data)
-		--If is not valid then quit
+		-- If is not valid then quit
 		if type(data) ~= "table" then return "" end
 		
-		--Convert Table to Json
+		-- Convert Table to Json
 		return util.TableToJSON( data )
 	end
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("jsonToTable(String)")
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function table jsonToTable(string data)
 		if data == "" then return end
 		return util.JSONToTable(data)
@@ -587,24 +587,24 @@ if SERVER then
 		Function: animate
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:animate(Number)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:animate(number Animation)
 		local isAdmin = false
 		local propProtection = false
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() then
 			-- If This is a Player then quit
 			if this:IsPlayer() then return end
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -619,24 +619,24 @@ if SERVER then
 		end
 	end
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:animate(String)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(55)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:animate(string Animation)
 		local isAdmin = false
 		local propProtection = false
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() then
 			-- If This is a Player then quit
 			if this:IsPlayer() then return end
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -651,24 +651,24 @@ if SERVER then
 		end
 	end
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:animate(Number, Number)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(60)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:animate(number Sequence, number Speed)
 		local isAdmin = false
 		local propProtection = false
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() then
 			-- If This is a Player then quit
 			if this:IsPlayer() then return end
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -684,24 +684,24 @@ if SERVER then
 		end
 	end
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:animate(String, Number)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(60)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:animate(string Animation, number Speed)
 		local isAdmin = false
 		local propProtection = false
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() then
 			-- If This is a Player then quit
 			if this:IsPlayer() then return end
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -717,25 +717,25 @@ if SERVER then
 		end
 	end
 
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:getAnimation()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(5)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function number entity:getAnimation()
 		if not this:IsValid() then return 0 end
 		return this:GetSequence() or 0
 	end
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:getAnimationByName(string)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(10)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function number entity:getAnimationByName(string Animation)
 		if not this:IsValid() then return 0 end
 		if (string.Trim(Animation) == "") then
@@ -749,23 +749,23 @@ if SERVER then
 		Function: disableFallDamage
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:disableFallDamage()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function number entity:disableFallDamage()
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() and this:IsPlayer() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -780,7 +780,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or propProtection ) then
-			--Apply Velocity to entity
+			-- Apply Velocity to entity
 			FallDamageList[this:UniqueID()] = "DISABLE"
 		end
 	end
@@ -789,23 +789,23 @@ if SERVER then
 		Function: enableFallDamage
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:enableFallDamage()")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function number entity:enableFallDamage()
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() and this:IsPlayer() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -820,7 +820,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or propProtection ) then
-			--Apply Velocity to entity
+			-- Apply Velocity to entity
 			FallDamageList[this:UniqueID()] = "ENABLE"
 		end
 	end
@@ -829,24 +829,24 @@ if SERVER then
 		Function: egpHUDSetPlayer
 	---------------------------------------------------]]
 	
-	--Log Loading Message
+	-- Log Loading Message
 	loadingLog("Entity:egpHUDSetPlayer(Entity)")
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
-	--Setup E2 Function
+	-- Setup E2 Function
 	e2function void entity:egpHUDSetPlayer(entity ply)
 	
 		local isAdmin = false
 		local propProtection = false
 		local Ent = this
 		
-		--If entity is not Valid
+		-- If entity is not Valid
 		if this:IsValid() and not this:IsPlayer() then
-			--If Game is Single Player then Return True
+			-- If Game is Single Player then Return True
 			if game.SinglePlayer() then isAdmin = true end
-			--If is Admin quit with true
+			-- If is Admin quit with true
 			if self.player:IsAdmin() then isAdmin = true end
 			
 			if not isAdmin then
@@ -875,10 +875,10 @@ if SERVER then
 		end
 	end
 	
-	--SetUp E2 Function Cost
+	-- SetUp E2 Function Cost
 	__e2setcost(nil)
 
-	--Log Loading Message
+	-- Log Loading Message
 	Msg( "|| Load Complete!                   ||\n" )
 	Msg( "\\====================================/\n" )
 end

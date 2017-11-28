@@ -31,24 +31,8 @@ if SERVER then
 			return 0
 		end
 	end
-	
 	hook.Add("GetFallDamage", "Get Fall Damage", GetFallDamage)
 	
-	-- Setup Loading Log Formatation
-	function loadingLog(text)
-		-- Set Max Size
-		local size = 32
-		-- If Text Len < max size
-		if(string.len(text) < size) then
-			-- Format the text to be Text+Spaces*LeftSize
-			text = text .. string.rep( " ", size-string.len(text) )
-		else
-			-- If Text is too much big then cut and add ...
-			text = string.Left( text, size-3 ) .. "..."
-		end
-		-- Log Messsage
-		Msg( "||  "..text.."||\n" )
-	end
 	
 	local function Animate( Ent, Animation )
 		-- If Entity is Valid and Animation are not Empty
@@ -96,9 +80,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: teleport
 	------------------------------------------------------------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:teleport(Vector)")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(50)
@@ -164,9 +145,6 @@ if SERVER then
 		Function: playerUniqueID
 	---------------------------------------------------]]
 	
-	-- Log Loading Message
-	loadingLog("Entity:playerUniqueId()")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(5)
 	
@@ -183,9 +161,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: ApplyPlayerForce
 	---------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:applyPlayerForce(Vector)")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(20)
@@ -230,9 +205,6 @@ if SERVER then
 		Function: hasNoCollideAll
 	---------------------------------------------------]]
 	
-	-- Log Loading Message
-	loadingLog("Entity:hasNoCollideAll()")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(1)
 	
@@ -248,9 +220,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: setCollideAll
 	---------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:setCollideAll()")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(50)
@@ -289,9 +258,6 @@ if SERVER then
 		Function: removeNoCollideAll
 	---------------------------------------------------]]
 	
-	-- Log Loading Message
-	loadingLog("Entity:removeNoCollideAll()")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(25)
 	
@@ -329,9 +295,6 @@ if SERVER then
 		Function: setOwner
 	---------------------------------------------------]]
 	
-	-- Log Loading Message
-	loadingLog("Entity:setOwner(Entity)")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(200)
 	
@@ -355,9 +318,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: ignite
 	---------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:ignite()")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(50)
@@ -395,9 +355,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: extinguish
 	---------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:extinguish()")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(15)
@@ -439,9 +396,6 @@ if SERVER then
 		Function: setHealth
 	---------------------------------------------------]]
 	
-		-- Log Loading Message
-	loadingLog("Entity:setHealth(Number)")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(100)
 	
@@ -462,9 +416,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: takeDamage
 	---------------------------------------------------]]
-	
-		-- Log Loading Message
-	loadingLog("Entity:takeDamage(Number)")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(45)
@@ -523,9 +474,6 @@ if SERVER then
 		Function: set
 	---------------------------------------------------]]
 	
-	-- Log Loading Message
-	loadingLog("Entity:set(String, String)")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(15)
 	
@@ -539,9 +487,6 @@ if SERVER then
 			this:Fire(input, param)
 		end
 	end
-	
-	-- Log Loading Message
-	loadingLog("Entity:set(String, Number)")
 	
 	-- Setup E2 Function
 	e2function void entity:set(string input, number param)
@@ -558,9 +503,6 @@ if SERVER then
 		Function: tableToJson
 	---------------------------------------------------]]
 	
-	-- Log Loading Message
-	loadingLog("tableToJson(Table)")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(20)
 	
@@ -573,9 +515,6 @@ if SERVER then
 		return util.TableToJSON( data )
 	end
 	
-	-- Log Loading Message
-	loadingLog("jsonToTable(String)")
-	
 	-- Setup E2 Function
 	e2function table jsonToTable(string data)
 		if data == "" then return end
@@ -586,9 +525,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: animate
 	---------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:animate(Number)")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(50)
@@ -619,9 +555,6 @@ if SERVER then
 		end
 	end
 	
-	-- Log Loading Message
-	loadingLog("Entity:animate(String)")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(55)
 	
@@ -650,9 +583,6 @@ if SERVER then
 			Animate(this, Animation)
 		end
 	end
-	
-	-- Log Loading Message
-	loadingLog("Entity:animate(Number, Number)")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(60)
@@ -684,9 +614,6 @@ if SERVER then
 		end
 	end
 	
-	-- Log Loading Message
-	loadingLog("Entity:animate(String, Number)")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(60)
 	
@@ -716,9 +643,6 @@ if SERVER then
 			this:SetPlaybackRate(math.max(Speed, 0))
 		end
 	end
-
-	-- Log Loading Message
-	loadingLog("Entity:getAnimation()")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(5)
@@ -729,8 +653,6 @@ if SERVER then
 		return this:GetSequence() or 0
 	end
 	
-	-- Log Loading Message
-	loadingLog("Entity:getAnimationByName(string)")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(10)
@@ -748,9 +670,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: disableFallDamage
 	---------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:disableFallDamage()")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(50)
@@ -789,9 +708,6 @@ if SERVER then
 		Function: enableFallDamage
 	---------------------------------------------------]]
 	
-	-- Log Loading Message
-	loadingLog("Entity:enableFallDamage()")
-	
 	-- SetUp E2 Function Cost
 	__e2setcost(50)
 	
@@ -828,9 +744,6 @@ if SERVER then
 	--[[-------------------------------------------------
 		Function: egpHUDSetPlayer
 	---------------------------------------------------]]
-	
-	-- Log Loading Message
-	loadingLog("Entity:egpHUDSetPlayer(Entity)")
 	
 	-- SetUp E2 Function Cost
 	__e2setcost(50)

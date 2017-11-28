@@ -27,17 +27,17 @@ if ( SERVER ) then
 	-- Register
 	E2Lib.RegisterExtension("nexuscore", true)
 	
-	local AntiSpamTimeout = 2
-	local FallDamageList = {}
+	local antiSpamTimeout = 2
+	local fallDamageList = {}
 	
-	local function getFallDamage( ply, flFallSpeed )
-		if ( FallDamageList[ply:UniqueID()] == "ENABLE" or not FallDamageList[ply:UniqueID()] ) then -- realistic fall damage is on
 			if ( GetConVarNumber( "mp_falldamage" ) > 0 ) then -- realistic fall damage is on
-				return flFallSpeed * 0.225; -- near the Source SDK value
+	local function getFallDamage( ply, speed )
+		if ( fallDamageList[ply:UniqueID()] == "ENABLE" or not fallDamageList[ply:UniqueID()] ) then -- realistic fall damage is on
+				return speed * 0.225; -- near the Source SDK value
 			end
 			
 			return 10
-		elseif ( FallDamageList[ply:UniqueID()] == "DISABLE" ) then
+		elseif ( fallDamageList[ply:UniqueID()] == "DISABLE" ) then
 			return 0
 		end
 	end
@@ -123,7 +123,7 @@ if ( SERVER ) then
 				-- If Pass
 				if ( antiSpam ) then
 					-- Set ReUseList Timeout
-					ReUseList[self.player:UniqueID()] = CurTime() + AntiSpamTimeout
+					ReUseList[self.player:UniqueID()] = CurTime() + antiSpamTimeout
 					-- If This is a Player
 					if ( not this:IsPlayer() ) then
 						Ent = this.player
@@ -441,7 +441,7 @@ if ( SERVER ) then
 				-- If Pass
 				if ( antiSpam ) then
 					-- Set ReUseList Timeout
-					ReUseList[self.player:UniqueID()] = CurTime() + AntiSpamTimeout
+					ReUseList[self.player:UniqueID()] = CurTime() + antiSpamTimeout
 					
 					-- If This is a Player
 					if ( not this:IsPlayer() ) then
@@ -669,7 +669,7 @@ if ( SERVER ) then
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or propProtection ) then
 			-- Apply Velocity to entity
-			FallDamageList[this:UniqueID()] = "DISABLE"
+			fallDamageList[this:UniqueID()] = "DISABLE"
 		end
 	end
 	
@@ -704,7 +704,7 @@ if ( SERVER ) then
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or propProtection ) then
 			-- Apply Velocity to entity
-			FallDamageList[this:UniqueID()] = "ENABLE"
+			fallDamageList[this:UniqueID()] = "ENABLE"
 		end
 	end
 	

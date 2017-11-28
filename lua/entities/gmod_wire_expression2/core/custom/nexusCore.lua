@@ -18,7 +18,8 @@ if ( SERVER ) then
 	local Vector = Vector
 	local CurTime = CurTime
 	
-
+	local fallDamageCVar = GetConVar( "mp_falldamage" )
+	
 	-- Loading Messages
 	Msg( "/====================================\\\n")
 	Msg( "||     Nexus Core (E2 Functions)    ||\n" )
@@ -30,9 +31,9 @@ if ( SERVER ) then
 	local antiSpamTimeout = 2
 	local fallDamageList = {}
 	
-			if ( GetConVarNumber( "mp_falldamage" ) > 0 ) then -- realistic fall damage is on
 	local function getFallDamage( ply, speed )
 		if ( fallDamageList[ply:UniqueID()] == "ENABLE" or not fallDamageList[ply:UniqueID()] ) then -- realistic fall damage is on
+			if ( fallDamageCVar:GetInt() > 0 ) then -- realistic fall damage is on
 				return speed * 0.225; -- near the Source SDK value
 			end
 			

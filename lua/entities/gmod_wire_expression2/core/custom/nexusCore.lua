@@ -8,7 +8,17 @@
 	Updated: 30-07-2016	08:03 PM
 ---------------------------------------------------]]
 
-if SERVER then
+if ( SERVER ) then
+	local math = math
+	local type = type
+	local game = game
+	local util = util
+	local string = string
+	local tobool = tobool
+	local Vector = Vector
+	local CurTime = CurTime
+	
+
 	-- Loading Messages
 	Msg( "/====================================\\\n")
 	Msg( "||     Nexus Core (E2 Functions)    ||\n" )
@@ -21,13 +31,13 @@ if SERVER then
 	local FallDamageList = {}
 	
 	function GetFallDamage( ply, flFallSpeed )
-		if( FallDamageList[ply:UniqueID()] == "ENABLE" or not FallDamageList[ply:UniqueID()] ) then -- realistic fall damage is on
-			if( GetConVarNumber( "mp_falldamage" ) > 0 ) then -- realistic fall damage is on
+		if ( FallDamageList[ply:UniqueID()] == "ENABLE" or not FallDamageList[ply:UniqueID()] ) then -- realistic fall damage is on
+			if ( GetConVarNumber( "mp_falldamage" ) > 0 ) then -- realistic fall damage is on
 				return flFallSpeed * 0.225; -- near the Source SDK value
 			end
 			
 			return 10
-		elseif ( FallDamageList[ply:UniqueID()] == "DISABLE") then
+		elseif ( FallDamageList[ply:UniqueID()] == "DISABLE" ) then
 			return 0
 		end
 	end
@@ -36,9 +46,9 @@ if SERVER then
 	
 	local function Animate( Ent, Animation )
 		-- If Entity is Valid and Animation are not Empty
-		if (Ent:IsValid() and Animation ~= "") then
+		if ( Ent:IsValid() and Animation ~= "" ) then
 			-- If Entity is not animated
-			if not Ent.Animated then
+			if ( not Ent.Animated ) then
 				-- This must be run once on entities that will be animated
 				Ent.Animated = true
 				Ent.AutomaticFrameAdvance = true
@@ -52,25 +62,25 @@ if SERVER then
 			end
 			
 			-- If Animation is String
-			if type(Animation) == "string" then
+			if ( type(Animation) == "string" ) then
 				-- If Animation are not Empty
-				if(string.Trim(Animation) == "") then
+				if ( string.Trim(Animation) == "" ) then
 					Animation = 0
 				else
 					-- Find Animation Number
-					Animation = Ent:LookupSequence(string.Trim(Animation)) or 0
+					Animation = Ent:LookupSequence( string.Trim( Animation ) ) or 0
 				end
 			end
 			
 			-- Floor
-			Animation = math.floor(Animation)
+			Animation = math.floor( Animation )
 			
 			-- Reset Sequence
-			Ent:ResetSequence(Animation)
+			Ent:ResetSequence( Animation )
 			-- Set Cycle of Zero
-			Ent:SetCycle(0)
+			Ent:SetCycle( 0 )
 			-- Set PlayBack Rate at One
-			Ent:SetPlaybackRate(1)
+			Ent:SetPlaybackRate( 1 )
 		end
 	end
 	
@@ -93,31 +103,31 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this and this:IsValid() then 
+		if ( this and this:IsValid() ) then 
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- Set Player In ReUseList
-				if not ReUseList[self.player:UniqueID()] then
+				if ( not ReUseList[self.player:UniqueID()] ) then
 					ReUseList[self.player:UniqueID()] = -1
 				end
 				
 				-- Check if user are not spaming with the e2
-				if ReUseList[self.player:UniqueID()] == -1 then
+				if ( ReUseList[self.player:UniqueID()] == -1 ) then
 					antiSpam = true
-				elseif CurTime() > ReUseList[self.player:UniqueID()] then 
+				elseif ( CurTime() > ReUseList[self.player:UniqueID()] ) then 
 					antiSpam = true
 				end
 				
 				-- If Pass
-				if antiSpam then
+				if ( antiSpam ) then
 					-- Set ReUseList Timeout
 					ReUseList[self.player:UniqueID()] = CurTime() + AntiSpamTimeout
 					-- If This is a Player
-					if not this:IsPlayer() then
+					if ( not this:IsPlayer() ) then
 						Ent = this.player
 					end
 					-- Check if is Allowed
@@ -129,15 +139,15 @@ if SERVER then
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or ( antiSpam and propProtection ) ) then
 			-- If is Player
-			if this:IsPlayer() then
+			if ( this:IsPlayer() ) then
 				-- If Player is In Vehicle
-				if this:InVehicle() then
+				if ( this:InVehicle() ) then
 					-- Force Player get out from Vehicle
 					this:ExitVehicle()
 				end 
 			end
 			-- Teleport entity to Position
-			this:SetPos(Vector(pos[1], pos[2], pos[3]))
+			this:SetPos( Vector(pos[1], pos[2], pos[3]) )
 		end
 	end
 	
@@ -151,9 +161,9 @@ if SERVER then
 	-- Setup E2 Function
 	e2function number entity:playerUniqueId()
 		-- If entity is not Valid
-		if not this:IsValid() then return 0 end 
+		if ( not this:IsValid() ) then return 0 end 
 		-- If entity is Not a Player
-		if not this:IsPlayer() then return 0 end
+		if ( not this:IsPlayer() ) then return 0 end
 		-- Return Player UniqueID
 		return this:UniqueID()
 	end
@@ -170,15 +180,15 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() and this:IsPlayer() then
+		if ( this:IsValid() and this:IsPlayer() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
@@ -189,15 +199,15 @@ if SERVER then
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or propProtection ) then
 			-- If is Player
-			if this:IsPlayer() then
+			if ( this:IsPlayer() ) then
 				-- If Player is In Vehicle
-				if this:InVehicle() then
+				if ( this:InVehicle() ) then
 					-- Force Player get out from Vehicle
 					this:ExitVehicle()
 				end 
 			end
 			-- Apply Velocity to entity
-			this:SetVelocity(Vector(pos[1],pos[2],pos[3]))
+			this:SetVelocity( Vector(pos[1],pos[2],pos[3]) )
 		end
 	end
 	
@@ -211,10 +221,10 @@ if SERVER then
 	-- Setup E2 Function
 	e2function number entity:hasNoCollideAll()
 		-- If entity is not Valid
-		if not this:IsValid() then return false end 
+		if ( not this:IsValid() ) then return false end 
 		
 		-- Return if entity has No CollideAll
-		return util.tobool(this:GetCollisionGroup() == COLLISION_GROUP_WORLD)
+		return tobool( this:GetCollisionGroup() == COLLISION_GROUP_WORLD )
 	end
 	
 	--[[-------------------------------------------------
@@ -231,15 +241,15 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() and not this:IsPlayer() then
+		if ( this:IsValid() and not this:IsPlayer() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
@@ -250,7 +260,7 @@ if SERVER then
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
 			-- Apply Velocity to entity
-			this:SetCollisionGroup(COLLISION_GROUP_WORLD)
+			this:SetCollisionGroup( COLLISION_GROUP_WORLD )
 		end
 	end
 	
@@ -268,15 +278,15 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() and not this:IsPlayer() then
+		if ( this:IsValid() and not this:IsPlayer() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
@@ -287,7 +297,7 @@ if SERVER then
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
 			-- Remove No CollideAll
-			this:SetCollisionGroup(COLLISION_GROUP_NONE)
+			this:SetCollisionGroup( COLLISION_GROUP_NONE )
 		end
 	end
 
@@ -301,17 +311,17 @@ if SERVER then
 	-- Setup E2 Function
 	e2function void entity:setOwner(entity player)
 		-- If is not valid then quit
-		if not this:IsValid() then return end
+		if ( not this:IsValid() ) then return end
 		-- If is player then quit
-		if this:IsPlayer() then return end
+		if ( this:IsPlayer() ) then return end
 		-- If Player is Really a player then quit
-		if not player:IsPlayer() then return end
+		if ( not player:IsPlayer() ) then return end
 
 		-- Check if Player is not Admin and Game is Not SinglePlayer
-		if self.player:IsAdmin() and not game.SinglePlayer() then
+		if ( self.player:IsAdmin() and not game.SinglePlayer() ) then
 			-- Set Owner
 			-- this.Owner = player
-			this:SetPlayer(player)
+			this:SetPlayer( player )
 		end	
 	end
 	
@@ -329,15 +339,15 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() then
+		if ( this:IsValid() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
@@ -348,7 +358,7 @@ if SERVER then
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
 			-- Ignite
-			this:Ignite(99999999, 0)
+			this:Ignite( 99999999, 0 )
 		end
 	end
 	
@@ -366,15 +376,15 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() then
+		if ( this:IsValid() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
@@ -385,7 +395,7 @@ if SERVER then
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
 			-- If Is On Fire
-			if(this:IsOnFire()) then
+			if ( this:IsOnFire() ) then
 				-- Extinguish
 				this:Extinguish()
 			end
@@ -402,13 +412,13 @@ if SERVER then
 	-- Setup E2 Function
 	e2function void entity:setHealth(number amount)
 		-- If is not valid then quit
-		if not this:IsValid() then return end
+		if ( not this:IsValid() ) then return end
 		-- If is not valid player then quit
-		if not this:IsPlayer() then return end
+		if ( not this:IsPlayer() ) then return end
 		
 		-- Check if Player is not Admin and Game is Not SinglePlayer
-		if self.player:IsAdmin() or game.SinglePlayer() then
-			this:SetHealth(amount)
+		if ( self.player:IsAdmin() or game.SinglePlayer() ) then
+			this:SetHealth( amount )
 		end
 	end
 	
@@ -429,32 +439,32 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() and not this:IsPlayer() then
+		if ( this:IsValid() and not this:IsPlayer() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- Set Player In ReUseList
-				if not ReUseList[self.player:UniqueID()] then
+				if ( not ReUseList[self.player:UniqueID()] ) then
 					ReUseList[self.player:UniqueID()] = -1
 				end
 				
 				-- Check if user are not spaming with the e2
-				if ReUseList[self.player:UniqueID()] == -1 then
+				if ( ReUseList[self.player:UniqueID()] == -1 ) then
 					antiSpam = true
-				elseif CurTime() > ReUseList[self.player:UniqueID()] then
+				elseif ( CurTime() > ReUseList[self.player:UniqueID()] ) then
 					antiSpam = true
 				end
 				
 				-- If Pass
-				if antiSpam then
+				if ( antiSpam ) then
 					-- Set ReUseList Timeout
 					ReUseList[self.player:UniqueID()] = CurTime() + AntiSpamTimeout
 					
 					-- If This is a Player
-					if not this:IsPlayer() then
+					if ( not this:IsPlayer() ) then
 						Ent = this.player
 					end
 					-- Check if is Allowed
@@ -480,22 +490,22 @@ if SERVER then
 	-- Setup E2 Function
 	e2function void entity:set(string input, string param)
 		-- If is not valid then quit
-		if not this:IsValid() then return end
+		if ( not this:IsValid() ) then return end
 		
 		-- Check if Player is not Admin and Game is Not SinglePlayer
-		if self.player:IsAdmin() or game.SinglePlayer() then
-			this:Fire(input, param)
+		if ( self.player:IsAdmin() or game.SinglePlayer() ) then
+			this:Fire( input, param )
 		end
 	end
 	
 	-- Setup E2 Function
 	e2function void entity:set(string input, number param)
 		-- If is not valid then quit
-		if not this:IsValid() then return end
+		if ( not this:IsValid() ) then return end
 		
 		-- Check if Player is not Admin and Game is Not SinglePlayer
-		if self.player:IsAdmin() or game.SinglePlayer() then
-			this:Fire(input, param)
+		if ( self.player:IsAdmin() or game.SinglePlayer() ) then
+			this:Fire( input, param )
 		end
 	end
 	
@@ -509,7 +519,7 @@ if SERVER then
 	-- Setup E2 Function
 	e2function string tableToJson(table data)
 		-- If is not valid then quit
-		if type(data) ~= "table" then return "" end
+		if ( type( data ) ~= "table" ) then return "" end
 		
 		-- Convert Table to Json
 		return util.TableToJSON( data )
@@ -517,8 +527,8 @@ if SERVER then
 	
 	-- Setup E2 Function
 	e2function table jsonToTable(string data)
-		if data == "" then return end
-		return util.JSONToTable(data)
+		if ( data == "" ) then return end
+		return util.JSONToTable( data )
 	end
 	
 	
@@ -535,15 +545,15 @@ if SERVER then
 		local propProtection = false
 		
 		-- If entity is not Valid
-		if this:IsValid() then
+		if ( this:IsValid() ) then
 			-- If This is a Player then quit
-			if this:IsPlayer() then return end
+			if ( this:IsPlayer() ) then return end
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- Check if is Allowed
 				propProtection = ( this == self.player or E2Lib.isOwner(self, this) or E2Lib.isFriend(this, self.player) )
 			end
@@ -551,7 +561,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			Animate(this, Animation)
+			Animate( this, Animation )
 		end
 	end
 	
@@ -564,15 +574,15 @@ if SERVER then
 		local propProtection = false
 		
 		-- If entity is not Valid
-		if this:IsValid() then
+		if ( this:IsValid() ) then
 			-- If This is a Player then quit
-			if this:IsPlayer() then return end
+			if ( this:IsPlayer() ) then return end
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- Check if is Allowed
 				propProtection = ( this == self.player or E2Lib.isOwner(self, this) or E2Lib.isFriend(this, self.player) )
 			end
@@ -580,7 +590,7 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			Animate(this, Animation)
+			Animate( this, Animation )
 		end
 	end
 	
@@ -593,15 +603,15 @@ if SERVER then
 		local propProtection = false
 		
 		-- If entity is not Valid
-		if this:IsValid() then
+		if ( this:IsValid() ) then
 			-- If This is a Player then quit
-			if this:IsPlayer() then return end
+			if ( this:IsPlayer() ) then return end
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- Check if is Allowed
 				propProtection = ( this == self.player or E2Lib.isOwner(self, this) or E2Lib.isFriend(this, self.player) )
 			end
@@ -609,8 +619,8 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			Animate(this, Sequence)
-			this:SetPlaybackRate(math.max(Speed, 0))
+			Animate( this, Sequence )
+			this:SetPlaybackRate( math.max(Speed, 0) )
 		end
 	end
 	
@@ -623,15 +633,15 @@ if SERVER then
 		local propProtection = false
 		
 		-- If entity is not Valid
-		if this:IsValid() then
+		if ( this:IsValid() ) then
 			-- If This is a Player then quit
-			if this:IsPlayer() then return end
+			if ( this:IsPlayer() ) then return end
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- Check if is Allowed
 				propProtection = ( this == self.player or E2Lib.isOwner(self, this) or E2Lib.isFriend(this, self.player) )
 			end
@@ -639,8 +649,8 @@ if SERVER then
 		
 		-- If Player is Admin or passed on Prop Protection
 		if ( isAdmin or propProtection ) then
-			Animate(this, Animation)
-			this:SetPlaybackRate(math.max(Speed, 0))
+			Animate( this, Animation )
+			this:SetPlaybackRate( math.max(Speed, 0) )
 		end
 	end
 	
@@ -649,7 +659,7 @@ if SERVER then
 	
 	-- Setup E2 Function
 	e2function number entity:getAnimation()
-		if not this:IsValid() then return 0 end
+		if ( not this:IsValid() ) then return 0 end
 		return this:GetSequence() or 0
 	end
 	
@@ -659,11 +669,11 @@ if SERVER then
 	
 	-- Setup E2 Function
 	e2function number entity:getAnimationByName(string Animation)
-		if not this:IsValid() then return 0 end
-		if (string.Trim(Animation) == "") then
+		if ( not this:IsValid() ) then return 0 end
+		if ( string.Trim( Animation ) == "") then
 			return 0
 		else
-			return this:LookupSequence(string.Trim(Animation)) or 0
+			return this:LookupSequence( string.Trim( Animation ) ) or 0
 		end
 	end
 	
@@ -681,15 +691,15 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() and this:IsPlayer() then
+		if ( this:IsValid() and this:IsPlayer() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
@@ -718,15 +728,15 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() and this:IsPlayer() then
+		if ( this:IsValid() and this:IsPlayer() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
@@ -756,30 +766,30 @@ if SERVER then
 		local Ent = this
 		
 		-- If entity is not Valid
-		if this:IsValid() and not this:IsPlayer() then
+		if ( this:IsValid() and not this:IsPlayer() ) then
 			-- If Game is Single Player then Return True
-			if game.SinglePlayer() then isAdmin = true end
+			if ( game.SinglePlayer() ) then isAdmin = true end
 			-- If is Admin quit with true
-			if self.player:IsAdmin() then isAdmin = true end
+			if ( self.player:IsAdmin() ) then isAdmin = true end
 			
-			if not isAdmin then
+			if ( not isAdmin ) then
 				-- If This is a Player
-				if not this:IsPlayer() then
+				if ( not this:IsPlayer() ) then
 					Ent = this.player
 				end
 				-- Check if is Allowed
-				propProtection = ( this == self.player or E2Lib.isOwner(self, this) or E2Lib.isFriend( Ent, self.player) )
+				propProtection = ( this == self.player or E2Lib.isOwner(self, this) or E2Lib.isFriend( Ent, self.player ) )
 			end
 		end
 		
 		-- If Player is Admin or passed on AntiSpam and Prop Protection
 		if ( isAdmin or propProtection ) then
-			if ply:IsValid() and Ent:IsValid() then
+			if ( ply:IsValid() and Ent:IsValid() ) then
 				umsg.Start( "EGP_HUD_Use", ply )
 					umsg.Entity( Ent )
 					umsg.Char( 1 )
 				umsg.End()
-			elseif Ent:IsValid() then
+			elseif ( Ent:IsValid() ) then
 				umsg.Start( "EGP_HUD_Use", nil )
 					umsg.Entity( Ent )
 					umsg.Char( -1 )

@@ -30,7 +30,7 @@ if ( SERVER ) then
 	local AntiSpamTimeout = 2
 	local FallDamageList = {}
 	
-	function GetFallDamage( ply, flFallSpeed )
+	local function getFallDamage( ply, flFallSpeed )
 		if ( FallDamageList[ply:UniqueID()] == "ENABLE" or not FallDamageList[ply:UniqueID()] ) then -- realistic fall damage is on
 			if ( GetConVarNumber( "mp_falldamage" ) > 0 ) then -- realistic fall damage is on
 				return flFallSpeed * 0.225; -- near the Source SDK value
@@ -41,7 +41,7 @@ if ( SERVER ) then
 			return 0
 		end
 	end
-	hook.Add("GetFallDamage", "Get Fall Damage", GetFallDamage)
+	hook.Add( "GetFallDamage", "nexuscore.getfalldamage", getFallDamage )
 	
 	
 	local function Animate( Ent, Animation )

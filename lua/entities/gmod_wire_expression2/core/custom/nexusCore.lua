@@ -485,9 +485,14 @@ if ( SERVER ) then
 	
 	--[[-------------------------------------------------
 		Function: enableFallDamage
-		-1: clear (leave up to server)
-		 0: prevent fall damage
-		 1: enable fall damage
+		Sets whether the player should be affected by fall damage or not.
+		If the mp_falldamage convar is enabled, the damage is scaled based on the player's speed.
+		Otherwise, a default of 10 damage is applied.
+		
+		Possible parameters are:
+			-1: clear (leave fall damage up to server)
+			 0: prevent fall damage
+			 1: enable fall damage
 	---------------------------------------------------]]
 	
 	local function getFallDamage( ply, speed )
@@ -521,6 +526,7 @@ if ( SERVER ) then
 	
 	--[[-------------------------------------------------
 		Function: egpHudTogglePlayer
+		Sets whether the given player can see the Wire EGP HUD or not.
 	---------------------------------------------------]]
 	
 	local function egpHud( func, e2, egp, ply, enable )
@@ -547,6 +553,7 @@ if ( SERVER ) then
 	
 	--[[-------------------------------------------------
 		Function: egpHudToggle
+		Toggles the visibility of the player's Wire EGP HUD on themselves.
 	---------------------------------------------------]]
 	
 	e2function void wirelink:egpHudToggle(number enable)

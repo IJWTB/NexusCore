@@ -535,8 +535,9 @@ if ( SERVER ) then
         --[[local curtime = CurTime()
         if ( antispam[func][e2.player] and antispam[func][e2.player] == curtime ) then return end
         antispam[func][e2.player] = curtime]]
+		local canUse = hook.Run( "PlayerUse", e2.player, ply )
         
-        if ( not isAllowedByWire( e2, ply ) ) then return end
+        if ( not isAllowedByWire( e2, ply ) and not canUse ) then return end
         if ( not EGP:IsAllowed( e2, egp ) )   then return end
         
         umsg.Start( "EGP_HUD_Use", ply or e2.player )

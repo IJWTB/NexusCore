@@ -543,15 +543,18 @@ if ( SERVER ) then
     ---------------------------------------------------]]
     
     local function egpHud( func, e2, egp, ply, enable )
-        if ( IsValid( ply ) and not ply:IsPlayer() ) then return end
+        if ( ply ~= nil ) then
+            if ( IsValid( ply ) and not ply:IsPlayer() ) then return end
+            
+            --[[local curtime = CurTime()
+            if ( antispam[func][e2.player] and antispam[func][e2.player] == curtime ) then return end
+            antispam[func][e2.player] = curtime]]
+            local canUse = hook.Run( "PlayerUse", e2.player, ply )
+            
+            if ( not isAllowedByWire( e2, ply ) and not canUse ) then return end
+        end
         
-        --[[local curtime = CurTime()
-        if ( antispam[func][e2.player] and antispam[func][e2.player] == curtime ) then return end
-        antispam[func][e2.player] = curtime]]
-		local canUse = hook.Run( "PlayerUse", e2.player, ply )
-        
-        if ( not isAllowedByWire( e2, ply ) and not canUse ) then return end
-        if ( not EGP:IsAllowed( e2, egp ) )   then return end
+        if ( not EGP:IsAllowed( e2, egp ) ) then return end
         
         umsg.Start( "EGP_HUD_Use", ply or e2.player )
             umsg.Entity( egp )

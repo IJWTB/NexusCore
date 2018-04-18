@@ -29,11 +29,26 @@ if ( SERVER ) then
                                  LOCAL VARIABLES
     ---------------------------------------------------------------------------]]
     
-    local fallDamageCVar   = GetConVar( "mp_falldamage" )
+    nexuscore = nexuscore or {}
+    
     local isSinglePlayer   = game.SinglePlayer()
     local antiSpamTimeout  = 2 -- seconds
-    local fallDamageList   = {}
-    local antispam = {
+    
+    local FUNCTION_DISABLED = 0
+    local FUNCTION_ADMIN    = 1
+    local FUNCTION_EVERYONE = 2
+    local FUNCTION_CUSTOM   = 3
+    
+    local cvarfuncs = nexuscore.cvarfuncs or {
+        [FUNCTION_DISABLED] = function( ply, ent, val, hookname ) return false end,
+        [FUNCTION_ADMIN]    = function( ply, ent, val, hookname ) return isSinglePlayer or ply:IsAdmin() end,
+        [FUNCTION_EVERYONE] = function( ply, ent, val, hookname ) return true end,
+        [FUNCTION_CUSTOM]   = function( ply, ent, val, hookname ) return hook.Run( hookname, ply, ent, val ) end
+    }
+    
+    local falldamage = nexuscore.falldamage or {}
+    
+    local antispam = nexuscore.antispam or {
         damage     = {},
         health     = {},
         teleport   = {},
@@ -41,26 +56,24 @@ if ( SERVER ) then
         egp_self   = {}
     }
     
-    local FUNCTION_DISABLED = 0
-    local FUNCTION_ADMIN    = 1
-    local FUNCTION_EVERYONE = 2
-    local FUNCTION_CUSTOM   = 3
-    
-    local cvarFunctions = {
-        [FUNCTION_DISABLED] = function( ply, ent, val, hookname ) return false end,
-        [FUNCTION_ADMIN]    = function( ply, ent, val, hookname ) return isSinglePlayer or ply:IsAdmin() end,
-        [FUNCTION_EVERYONE] = function( ply, ent, val, hookname ) return true end,
-        [FUNCTION_CUSTOM]   = function( ply, ent, val, hookname ) return hook.Run( hookname, ply, ent, val ) end
-    }
-    
+    local fallDamageCVar = GetConVar( "mp_falldamage" )
     local setHealthCVar  = CreateConVar( "nexuscore_set_health",  FUNCTION_ADMIN, {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "Controls the entity:setHealth() e2 function -- 0: disabled, 1: admin only, 2: everyone, 3: uses NexusCoreSetHealth hook for custom checking" )
-    local takeHealthCVar = CreateConVar( "nexuscore_take_damage", FUNCTION_ADMIN, {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "Controls the entity:takeDamage() e2 function -- 0: disabled, 1: admin only, 2: everyone, 3: uses NexusCoreTakeDamage hook for custom checking" )
+    local takeDamageCVar = CreateConVar( "nexuscore_take_damage", FUNCTION_ADMIN, {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "Controls the entity:takeDamage() e2 function -- 0: disabled, 1: admin only, 2: everyone, 3: uses NexusCoreTakeDamage hook for custom checking" )
     local teleportCVar   = CreateConVar( "nexuscore_teleport",    FUNCTION_ADMIN, {FCVAR_ARCHIVE, FCVAR_REPLICATED, FCVAR_SERVER_CAN_EXECUTE}, "Controls the entity:teleport() e2 function -- 0: disabled, 1: admin only, 2: everyone, 3: uses NexusCoreTeleport hook for custom checking" )
     
     local MAX_IGNITE_VALUE = 99999999
     local SOURCE_FALL_DAMAGE_MULTIPLIER = 0.225
     local DEFAULT_FALL_DAMAGE = 10
     local NO_FALL_DAMAGE = 0
+    
+    nexuscore.falldamage = falldamage
+    nexuscore.antispam   = antispam
+    nexuscore.cvarfuncs  = cvarfuncs
+    
+    nexuscore.FUNCTION_DISABLED = FUNCTION_DISABLED
+    nexuscore.FUNCTION_ADMIN    = FUNCTION_ADMIN
+    nexuscore.FUNCTION_EVERYONE = FUNCTION_EVERYONE
+    nexuscore.FUNCTION_CUSTOM   = FUNCTION_CUSTOM
     
     --[[-------------------------------------------------------------------------
                                  UTILITY FUNCTIONS
@@ -116,7 +129,7 @@ if ( SERVER ) then
     e2function void entity:teleport(vector pos)
         if ( not IsValid( this ) or not this:IsPlayer() ) then return end
         
-        local func = cvarFunctions[teleportCVar:GetInt()] or cvarFunctions[FUNCTION_DISABLED]
+        local func = cvarfuncs[teleportCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreTeleport" ) ) then return end
         
         --[[local curtime = SysTime()
@@ -142,7 +155,7 @@ if ( SERVER ) then
     e2function void entity:setHealth(number amount)
         if ( not IsValid( this ) or not this:IsPlayer() ) then return end
         
-        local func = cvarFunctions[setHealthCVar:GetInt()] or cvarFunctions[FUNCTION_DISABLED]
+        local func = cvarfuncs[setHealthCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreSetHealth" ) ) then return end
         
         --[[local curtime = CurTime()
@@ -164,7 +177,7 @@ if ( SERVER ) then
     e2function void entity:takeDamage(number amount)
         if ( not IsValid( this ) or this:IsPlayer() ) then return end
         
-        local func = cvarFunctions[takeDamageCVar:GetInt()] or cvarFunctions[FUNCTION_DISABLED]
+        local func = cvarfuncs[takeDamageCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreTakeDamage" ) ) then return end
         
         --[[local curtime = CurTime()
@@ -498,9 +511,9 @@ if ( SERVER ) then
     local function getFallDamage( ply, speed )
         local sid = ply:SteamID64()
         
-        if ( fallDamageList[sid] ) then -- apply fall damage if explicitly enabled
+        if ( falldamage[sid] ) then -- apply fall damage if explicitly enabled
             return fallDamageCVar:GetBool() and speed * SOURCE_FALL_DAMAGE_MULTIPLIER or DEFAULT_FALL_DAMAGE
-        elseif ( fallDamageList[sid] == false ) then -- prevent fall damage if explicitly disabled
+        elseif ( falldamage[sid] == false ) then -- prevent fall damage if explicitly disabled
             return NO_FALL_DAMAGE
         end
     end
@@ -513,15 +526,15 @@ if ( SERVER ) then
         
         enable = math.Clamp( math.floor( enable ), -1, 1 )
         if ( enable == -1 ) then
-            enable = nil -- clear the player from the fallDamageList
+            enable = nil -- clear the player from the fall damage list
         else
             enable = tobool( enable )
         end
         
-        if ( enable and fallDamageList[this:SteamID64()] ) then return end -- skip if enabling but already enabled
+        if ( enable and falldamage[this:SteamID64()] ) then return end -- skip if enabling but already enabled
         if ( not isAllowed( self, this ) )    then return end
         
-        fallDamageList[this:SteamID64()] = enable
+        falldamage[this:SteamID64()] = enable
     end
     
     --[[-------------------------------------------------

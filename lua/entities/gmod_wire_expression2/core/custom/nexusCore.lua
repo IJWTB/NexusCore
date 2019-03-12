@@ -153,7 +153,7 @@ if ( SERVER ) then
     __e2setcost(75)
     
     e2function void entity:setHealth(number amount)
-        if ( not IsValid( this ) or not this:IsPlayer() ) then return end
+        if ( not IsValid( this ) ) then return end
         
         local func = cvarfuncs[setHealthCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreSetHealth" ) ) then return end
@@ -175,7 +175,7 @@ if ( SERVER ) then
     __e2setcost(75)
     
     e2function void entity:takeDamage(number amount)
-        if ( not IsValid( this ) or this:IsPlayer() ) then return end
+        if ( not IsValid( this ) ) then return end
         
         local func = cvarfuncs[takeDamageCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreTakeDamage" ) ) then return end

@@ -32,7 +32,7 @@ if ( SERVER ) then
     nexuscore = nexuscore or {}
     
     local isSinglePlayer   = game.SinglePlayer()
-    local antiSpamTimeout  = 2 -- seconds
+    local antiSpamTimeout  = 0.5 -- seconds
     
     local FUNCTION_DISABLED = 0
     local FUNCTION_ADMIN    = 1
@@ -53,7 +53,9 @@ if ( SERVER ) then
         health     = {},
         teleport   = {},
         egp_player = {},
-        egp_self   = {}
+        egp_self   = {},
+        ignite     = {},
+        extinguish = {}
     }
     
     local fallDamageCVar = GetConVar( "mp_falldamage" )
@@ -101,6 +103,17 @@ if ( SERVER ) then
             )
     end
     
+    local function checkAntiSpam(id, e2)
+        local curtime = CurTime()
+        if ( antispam[id][e2.player] and antispam[id][e2.player] == curtime ) then
+            return false
+        end
+        
+        antispam[id][e2.player] = curtime
+        
+        return true
+    end
+    
     --[[-------------------------------------------------------------------------
                              NEXUS CORE E2 FUNCTIONS
     ---------------------------------------------------------------------------]]
@@ -132,9 +145,7 @@ if ( SERVER ) then
         local func = cvarfuncs[teleportCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreTeleport" ) ) then return end
         
-        --[[local curtime = SysTime()
-        if ( antispam["teleport"][e2.player] and curtime == antispam["teleport"][e2.player] ) then return end
-        antispam["teleport"][e2.player] = curtime]]
+        --if ( not checkAntiSpam( "teleport", e2 ) ) then return end
         
         if ( not isAllowedByWire( self, this ) ) then return end
         
@@ -158,9 +169,7 @@ if ( SERVER ) then
         local func = cvarfuncs[setHealthCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreSetHealth" ) ) then return end
         
-        --[[local curtime = CurTime()
-        if ( antispam["health"][e2.player] and curtime == antispam["health"][e2.player] ) then return end
-        antispam["health"][e2.player] = curtime]]
+        --if ( not checkAntiSpam( "health", e2 ) ) then return end
         
         if ( not isAllowedByWire( self, this ) ) then return end
         
@@ -180,9 +189,7 @@ if ( SERVER ) then
         local func = cvarfuncs[takeDamageCVar:GetInt()] or cvarfuncs[FUNCTION_DISABLED]
         if ( not func( self.player, this, amount, "NexusCoreTakeDamage" ) ) then return end
         
-        --[[local curtime = CurTime()
-        if ( antispam["damage"][e2.player] and curtime == antispam["damage"][e2.player] ) then return end
-        antispam["damage"][e2.player] = curtime + antiSpamTimeout]]
+        --if ( not checkAntiSpam( "damage", e2 ) ) then return end
         
         if ( takeDamageCVar:GetInt() ~= FUNCTION_CUSTOM and not isAllowedByWire( self, this ) ) then return end
         
@@ -270,17 +277,23 @@ if ( SERVER ) then
     __e2setcost(50)
     
     e2function void entity:ignite()
-        if ( not IsValid( this ) or not isAllowed( self, this ) ) then return end
+        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "ignite", self, this ) ) then return end
+        
         this:Ignite( MAX_IGNITE_VALUE, 0 )
     end
     
     e2function void entity:ignite(number seconds)
-        if ( not IsValid( this ) or not isAllowed( self, this ) ) then return end
+        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "ignite", self, this ) ) then return end
+        
         this:Ignite( math.Clamp( seconds, 0, MAX_IGNITE_VALUE ), 0 )
     end
     
     e2function void entity:ignite(number seconds, number radius)
-        if ( not IsValid( this ) or not isAllowed( self, this ) ) then return end
+        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "ignite", self, this ) ) then return end
+        
         this:Ignite( math.Clamp( seconds, 0, MAX_IGNITE_VALUE ), math.Clamp( radius, 0, MAX_IGNITE_VALUE ) )
     end
     
@@ -292,7 +305,9 @@ if ( SERVER ) then
     __e2setcost(15)
     
     e2function void entity:extinguish()
-        if ( not IsValid( this ) or not this:IsOnFire() or not isAllowed( self, this ) ) then return end
+        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "extinguish", self, this ) ) then return end
+        
         this:Extinguish()
     end
     
@@ -546,9 +561,7 @@ if ( SERVER ) then
         if ( ply ~= nil ) then
             if ( IsValid( ply ) and not ply:IsPlayer() ) then return end
             
-            --[[local curtime = CurTime()
-            if ( antispam[func][e2.player] and antispam[func][e2.player] == curtime ) then return end
-            antispam[func][e2.player] = curtime]]
+            --if ( not checkAntiSpam( func, e2 ) ) then return end
             local canUse = hook.Run( "PlayerUse", e2.player, ply )
             
             if ( not isAllowedByWire( e2, ply ) and not canUse ) then return end

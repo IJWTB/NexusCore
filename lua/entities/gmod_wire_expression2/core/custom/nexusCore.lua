@@ -184,7 +184,7 @@ if ( SERVER ) then
         if ( antispam["damage"][e2.player] and curtime == antispam["damage"][e2.player] ) then return end
         antispam["damage"][e2.player] = curtime + antiSpamTimeout]]
         
-        if ( not isAllowedByWire( self, this ) ) then return end
+        if ( takeDamageCVar:GetInt() ~= FUNCTION_CUSTOM and not isAllowedByWire( self, this ) ) then return end
         
         this:TakeDamage( amount, self.player, self )
     end

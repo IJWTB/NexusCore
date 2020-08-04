@@ -5,7 +5,7 @@
     @user Steam Profile: http://steamcommunity.com/profiles/76561197983103320
 
     Created: 05-11-2012
-    Updated: 30-07-2016    08:03 PM
+    Updated: 30-07-2016 (last update from ZionDevelopers)
 ---------------------------------------------------]]
 
 if ( SERVER ) then
@@ -122,18 +122,6 @@ if ( SERVER ) then
     ---------------------------------------------------------------------------]]
     
     E2Lib.RegisterExtension( "nexuscore", true )
-        
-    --[[-------------------------------------------------
-        Function: playerUniqueID
-    ---------------------------------------------------]]
-    
-    --[[ There really should be no need to ever use PLAYER:UniqueID(), stick to SteamID/SteamID64/AccountID
-    __e2setcost(5)
-    
-    e2function number entity:playerUniqueId()
-        return IsValid( this ) and this:IsPlayer() and this:UniqueID() or 0
-    end
-    ]]
     
     --[[-------------------------------------------------
         Function: teleport
@@ -161,7 +149,7 @@ if ( SERVER ) then
     
     --[[-------------------------------------------------
         Function: setHealth
-        Sets the player's health to the given number.
+        Sets the entity's health to the given number.
     ---------------------------------------------------]]
     
     __e2setcost(75)
@@ -200,7 +188,7 @@ if ( SERVER ) then
     end
     
     --[[-------------------------------------------------
-        Function: ApplyPlayerForce
+        Function: applyPlayerForce
         Applies force on the player toward the given vector.
     ---------------------------------------------------]]
     
@@ -261,6 +249,7 @@ if ( SERVER ) then
     
     --[[-------------------------------------------------
         Function: setOwner
+        Changes the entity's owner to the given player.
     ---------------------------------------------------]]
     
     __e2setcost(200)
@@ -334,23 +323,6 @@ if ( SERVER ) then
         
         this:Fire( key, value )
     end
-    
-    --[[-------------------------------------------------
-        Function: tableToJson
-    ---------------------------------------------------]]
-    
-    --[[ These functions aren't needed because Wire includes jsonEncode/jsonDecode natively
-    
-    __e2setcost(20)
-    
-    e2function string tableToJson(table tbl)
-        return istable( tbl ) and util.TableToJSON( tbl ) or ""
-    end
-    
-    e2function table jsonToTable(string str)
-        return str:len() > 0 and util.JSONToTable( str ) or nil
-    end
-    ]]
     
     --[[-------------------------------------------------
         Function: animate

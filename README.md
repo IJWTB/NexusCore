@@ -1,7 +1,7 @@
 Nexus Core
 =====
 
-Nexus Core is library of Expression 2 functions.
+Nexus Core is library of Expression 2 functions. The original library was written by the ZionDevelopers team, and has been significantly cleaned up and modified to provide hook calls for controlling player health, teleporting, and damaging.
 
 ```lua
 player:teleport(vector)
@@ -43,3 +43,9 @@ entity:sequenceDuration(number)
 wirelink:egpHudTogglePlayer(player, 0/1)
 wirelink:egpHudToggle(0/1)
 ```
+
+Significant changes (as per license requirements):
+- The code has largely been cleaned up and reorganized to reduce repetitive code (antispam, prop protection calls)
+- The function `entity:playerUniqueId()` is disabled to prevent its usage (it is poorly implemented and has key collisions, leading to potential security issues)
+- The functions `tableToJson()` and `jsonToTable()` have been removed since there are official E2 functions now
+- Added ability to allow external code to determine whether `setHealth/takeDamage/teleport` are allowed or not

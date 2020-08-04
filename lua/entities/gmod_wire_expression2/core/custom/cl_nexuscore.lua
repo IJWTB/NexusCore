@@ -21,6 +21,8 @@ E2Helper.Descriptions["lookupSequence"]     = "Gets the entity's numeric animati
 E2Helper.Descriptions["getAnimationByName"] = "Gets the entity's numeric animation sequence from the animation name (alias of lookupSequence)."
 E2Helper.Descriptions["getSequenceList"]    = "Gets the list of animation sequences available on the entity."
 E2Helper.Descriptions["sequenceDuration"]   = "Gets the duration of the entity's current sequence, or the duration of the passed sequence."
+E2Helper.Descriptions["setCycle"]           = "Sets the entity's current animation sequence cycle, i.e. how far into the animation to start. Value between 0 to 1."
+E2Helper.Descriptions["setPlaybackRate"]    = "Sets the entity's current animation sequence playback rate, i.e. how slow/fast the animation should progress."
 
 -- EGP functions
 E2Helper.Descriptions["egpHudTogglePlayer"] = "Sets whether the given player can see the Wire EGP HUD or not. Requires prop protection and PlayerUse to use on other players."

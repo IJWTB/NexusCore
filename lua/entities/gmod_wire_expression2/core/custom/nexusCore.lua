@@ -48,7 +48,7 @@ if ( SERVER ) then
     
     local falldamage = nexuscore.falldamage or {}
     
-    local antispam = nexuscore.antispam or {
+    nexuscore.antispam = nexuscore.antispam or {
         damage     = {},
         health     = {},
         teleport   = {},
@@ -68,8 +68,9 @@ if ( SERVER ) then
     local DEFAULT_FALL_DAMAGE = 10
     local NO_FALL_DAMAGE = 0
     
+    local antispam  = nexuscore.antispam
+    
     nexuscore.falldamage = falldamage
-    nexuscore.antispam   = antispam
     nexuscore.cvarfuncs  = cvarfuncs
     
     nexuscore.FUNCTION_DISABLED = FUNCTION_DISABLED
@@ -105,11 +106,13 @@ if ( SERVER ) then
     
     local function checkAntiSpam(id, e2)
         local curtime = CurTime()
-        if ( antispam[id][e2.player] and antispam[id][e2.player] == curtime ) then
+        
+        -- check if player is trying to perform the operation too soon
+        if ( antispam[id][e2.player] and curtime < antispam[id][e2.player] ) then
             return false
         end
         
-        antispam[id][e2.player] = curtime
+        antispam[id][e2.player] = curtime + antiSpamTimeout -- next time the operation can be occur
         
         return true
     end
@@ -277,22 +280,22 @@ if ( SERVER ) then
     __e2setcost(50)
     
     e2function void entity:ignite()
-        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
-        if ( not checkAntiSpam( "ignite", self, this ) ) then return end
+        if ( not IsValid( this ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "ignite", self ) ) then return end
         
         this:Ignite( MAX_IGNITE_VALUE, 0 )
     end
     
     e2function void entity:ignite(number seconds)
-        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
-        if ( not checkAntiSpam( "ignite", self, this ) ) then return end
+        if ( not IsValid( this ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "ignite", self ) ) then return end
         
         this:Ignite( math.Clamp( seconds, 0, MAX_IGNITE_VALUE ), 0 )
     end
     
     e2function void entity:ignite(number seconds, number radius)
-        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
-        if ( not checkAntiSpam( "ignite", self, this ) ) then return end
+        if ( not IsValid( this ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "ignite", self ) ) then return end
         
         this:Ignite( math.Clamp( seconds, 0, MAX_IGNITE_VALUE ), math.Clamp( radius, 0, MAX_IGNITE_VALUE ) )
     end
@@ -305,8 +308,8 @@ if ( SERVER ) then
     __e2setcost(15)
     
     e2function void entity:extinguish()
-        if ( not IsValid( ent ) or not isAllowed( self, this ) ) then return end
-        if ( not checkAntiSpam( "extinguish", self, this ) ) then return end
+        if ( not IsValid( this ) or not isAllowed( self, this ) ) then return end
+        if ( not checkAntiSpam( "extinguish", self ) ) then return end
         
         this:Extinguish()
     end
